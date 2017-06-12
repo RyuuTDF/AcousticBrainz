@@ -9,9 +9,19 @@ def find(name, path):
             #return os.path.join(root, name)
             return True
 
-# with open('/Users/Kharisnawan/OneDrive/Macbook White New/MMSR/project/training/acousticbrainz-mediaeval2017-tagtraum-train.tsv','rb') as tsvin, open('new.csv', 'wb') as csvout:
-#     tsvin = csv.reader(tsvin, delimiter='\t')
-#     csvout = csv.writer(csvout, delimiter=',')
+def findGenre(name, path):
+    # if name in open(path).read():
+    #     print "true"
+    with open(path, 'rt') as f:
+        reader = csv.reader(f, delimiter='\t')
+        for row in reader:
+            if name == row[0]:
+                print row[2]
+                return row[2]
+
+with open('/Users/Kharisnawan/OneDrive/Macbook White New/MMSR/project/training/acousticbrainz-mediaeval2017-tagtraum-train.tsv','rb') as tsvin, open('new.csv', 'wb') as csvout:
+    tsvin = csv.reader(tsvin, delimiter='\t')
+    csvout = csv.writer(csvout, delimiter=',')
     
 #     for row in tsvin:
 #     	name = row[0]+'.json'
@@ -24,6 +34,11 @@ for file in os.listdir("/Users/Kharisnawan/OneDrive/Macbook White New/MMSR/proje
     if file.endswith(".json"):
         filename = (os.path.join("/Users/Kharisnawan/OneDrive/Macbook White New/MMSR/project/acousticbrainz-mediaeval-train/00/", file))
         print file
+
+        filename_only = file[:-5]
+        print filename_only
+        genre_music = findGenre(filename_only,'/Users/Kharisnawan/OneDrive/Macbook White New/MMSR/project/training/acousticbrainz-mediaeval2017-tagtraum-train.tsv')
+
         with open(filename) as data_file:    
             data = json.load(data_file)
             average_loudness = data["lowlevel"]["average_loudness"]
@@ -38,7 +53,8 @@ for file in os.listdir("/Users/Kharisnawan/OneDrive/Macbook White New/MMSR/proje
                 'spectral_energy' : spectral_energy,
                 'spectral_centroid' : spectral_centroid,
                 'pitch_salience' : pitch_salience,
-                'mfcc' : mfcc
+                'mfcc' : mfcc,
+                'genre' : genre_music
             }
             json_dump=json.dumps(new_json_file)
             print json_dump
@@ -47,6 +63,7 @@ for file in os.listdir("/Users/Kharisnawan/OneDrive/Macbook White New/MMSR/proje
 
             with open(new_json_path, 'w') as outfile:
                 json.dump(json_dump, outfile)
+
 
 #pprint(data)
 
